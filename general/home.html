@@ -1,0 +1,60 @@
+<html>
+    <head></head>
+    <body>
+        <div class="form-book">
+            <form id="book" action="POST">
+                <div>
+                    <input type="text" name="data">
+                </div>
+                <button type="submit">SUBMIT</button>
+            </form>
+            <input type="text" id="search">
+        </div>
+        <div id="result">
+            <div>
+                <p>test</p>
+                <button>delete</button>
+            </div>
+            <div>
+                <p>test22</p>
+                <button>delete</button>
+            </div>
+        </div>
+        <script>
+            window.onload=(()=>{
+                let formBook = document.forms.book;
+                let result = document.getElementById('result');
+                formBook.onsubmit=((e)=>{
+                    e.preventDefault();
+                    let input =  formBook.querySelector('input');
+                    var div = document.createElement('div')
+                    var p = document.createElement('p');
+                    p.innerText = input.value
+                    div.appendChild(p)
+                    var button = document.createElement('button')
+                    button.innerText = "delete"
+                    button.id = "delete"
+                    div.appendChild(button)
+                    result.appendChild(div)
+                    formBook.reset()
+                })
+                result.onclick=((e)=>{
+                    if(e.target.tagName == 'BUTTON'){
+                        e.target.parentNode.remove()
+                    }
+                })
+                let search = document.getElementById('search')
+                search.onkeyup = ((e)=>{
+                    let data = document.querySelectorAll('#result div p')
+                    Array.from(data).forEach((el)=>{
+                        if(el.innerText.indexOf(e.target.value)!=-1){
+                            el.parentNode.style.display="block"
+                        } else {
+                            el.parentNode.style.display="none"
+                        }
+                    })
+                })
+            })
+        </script>
+    </body>
+</html>

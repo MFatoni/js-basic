@@ -1,0 +1,5 @@
+https://github.com/Sam-Meech-Ward/express_jest_and_mocks/blob/express/app.test.js
+https://www.youtube.com/watch?v=FKnzS_icp20
+https://zetcode.com/javascript/axios/
+https://stackoverflow.com/questions/44245588/how-to-send-authorization-header-with-axios
+https://vhudyma-blog.eu/3-ways-to-mock-axios-in-jest/#Way-1-jest.mock()

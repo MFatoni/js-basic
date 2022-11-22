@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REQRES</title>
+    <style>
+        *{margin:0;padding: 0;}
+        body {margin:20px;padding:10px}
+        .form-title{text-align: center;}
+        .form-title h1{padding:10px;color: black;}
+        form div input{margin:10px auto;padding:10px;display: block;width:calc(100% - 25px)}
+        form button{margin:10px auto;width:100%; padding:10px;border-radius: 10px;background-color: white;border: 0;box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);transition: all 1s ease ;}
+        form button:hover{transform:translateY(-7px)}
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-title">
+            <h1>Login</h1>
+        </div>
+        <form id="login" method="POST">
+            <div>
+                <input type="text" name="username" value="eve.holt@reqres.in">
+            </div>
+            <div>
+                <input type="text" name="email" value="eve.holt@reqres.in">
+            </div>
+            <div>
+                <input type="password" name="password" value="pistol">
+            </div>
+            <button type="submit">LOGIN</button>
+        </form>
+    </div>
+    <div>
+        <div class="form-title">
+            <h1>Register</h1>
+        </div>
+        <form id="register" method="POST">
+            <div>
+                <input type="text" name="username" value="eve.holt@reqres.in">
+            </div>
+            <div>
+                <input type="text" name="email" value="eve.holt@reqres.in">
+            </div>
+            <div>
+                <input type="password" name="password" value="cityslicka">
+            </div>
+            <button type="submit">REGISTER</button>
+        </form>
+    </div>
+    <script>
+        const API = 'https://reqres.in/api';
+        var HEADER = {
+            'Accept' : 'application/json',
+            'Content-Type' : 'application/json'
+        }
+        window.onload = (()=>{
+            registrationForm = document.forms.register;
+            registrationForm.onsubmit =((e)=>{
+                e.preventDefault()
+                register(registrationForm);
+            }) 
+            loginForm = document.forms.login;
+            loginForm.onsubmit = ((e)=>{
+                e.preventDefault()
+                login(loginForm);
+            })
+        })
+        register = (async (form)=>{
+            let body = extractFormInput(form);
+            let data = {
+                method :'POST',
+                headers : HEADER,
+                body: body
+            };
+            let url = `${API}/register`;
+            let response = await httpRequest(url,data);
+            console.log(response);
+        });
+        login = (async(form)=>{
+            let body = extractFormInput(form);
+            let data = {
+                method:'POST',
+                headers: HEADER,
+                body: body
+            }
+            let url =  `${API}/login`;
+            let response = await httpRequest(url,data);
+            console.log(response)
+        })
+        httpRequest = (async (url, data)=>{
+            var response={};
+            const rawResponse = await fetch(url, data);
+            if(rawResponse.status ===200){
+                response = await rawResponse.json();
+            }
+            return response;
+        })
+        extractFormInput = ((form)=>{
+            let userInput = form.querySelectorAll("input");
+            let data = {};
+            Array.from(userInput).forEach(element => {
+                data[element.name]=element.value;
+            });
+            return JSON.stringify(data);
+        })
+    </script>
+</body>
+</html>

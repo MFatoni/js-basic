@@ -1,0 +1,224 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <style>
+            * {padding:0px;margin:0px}
+            .menu {background-color:aliceblue;height:40px}
+            .nav {list-style:none}
+            .nav li{background-color:aliceblue;float:left;padding:10px}
+            .nav li ul {display:none}
+            .nav li:hover > ul {display:block}
+            .nav li ul li {padding:20px 0px 10px 0px}
+            .form-login {height:100%;width:100%;display:flex;align-items: center;justify-content: center;}
+        </style>
+    </head>
+    <body>
+        <div class="menu">
+            <ul class="nav">
+                <li>HOME</li>
+                <li>MENU 1</li>
+                <li>MENU 2
+                    <ul>
+                        <li>SUB MENU 1</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="form-login">
+            <form method="post" id="login">
+                <div>
+                    <input type="text" name="username" value="eve.holt@reqres.in">
+                </div>
+                <div>
+                    <input type="text" name="email" value="eve.holt@reqres.in">
+                </div>
+                <div>
+                    <input type="password" name="password" value="pistol">
+                </div>
+                <button type="submit">LOGIN</button>
+            </form>
+        </div>
+        <script>
+            const API = "https://reqres.in/api";
+            window.onload = (async()=>{
+                let formLogin = document.forms.login;
+                document.addEventListener('submit',((e)=>{
+                    e.preventDefault();
+                    authentication(formLogin);
+                }))
+            })
+            setCookie = ((name, value, day)=>{
+                let date = new Date()
+                date.setDate(date.getDate()+day)
+                console.log(date)
+                document.cookie = `${name}=${value};expires=${date};domain=127.0.0.1;path=/`;
+            })
+            getCookies = ((name)=>{
+                cookies = document.cookie.split(';');
+                for(let i=0;i<cookies.length;i++){
+                    let indexOfSeparator = cookies[i].indexOf('=');
+                    let key = cookies[i].substring(0,indexOfSeparator).trim()
+                    if(key === name ) {
+                        let value = cookies[i].slice(indexOfSeparator+1,-1)
+                        return value
+                    }
+                }
+            })
+            authentication = (async(form)=>{
+                let body = extractFormValue(form);
+                let data = {
+                    method : "POST",
+                    headers : {
+                        "Accept" : "application/json",
+                        "Content-Type" : "application/json"
+                    },
+                    body : body
+                }
+                try{
+                    rawResponse = await fetch(`${API}/login`,data)
+                    response = await rawResponse.json()
+                    // console.log(response)
+                    setCookie('token',response.token,7)
+                    window.location.href="home.html"
+                } catch(e){
+                    console.log(e)
+                }
+            })
+            extractFormValue = ((form)=>{
+                let inputs = form.getElementsByTagName('input');
+                let data = {}
+                Array.from(inputs).forEach((input)=>{
+                    data[input.name]=input.value
+                })
+                return JSON.stringify(data)
+            })
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            *{margin:0px;padding:0px}
+            .menu {background-color: black;height:40px}
+            .top-nav {list-style:none;color:white}
+            .top-nav > li {float:left;padding:10px;background-color:black}
+            .top-nav li:hover {background-color: rgb(27, 27, 27);}
+            .top-nav li ul {padding:20px 0px 10px 0px;background-color:black;display:none}
+            .top-nav li:hover > ul {display: block;}
+        </style>
+    </head>
+    <body>
+        <div class="menu">
+            <ul class="top-nav">
+                <li>HOME</li>
+                <li>MENU 1
+                    <ul>
+                        <li>SUB MENU 1</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="form">
+            <form id="login" method="POST">
+                <div>
+                    <input type="text" name="username" value="eve.holt@reqres.in">
+                </div>
+                <div>
+                    <input type="text" name="email" value="eve.holt@reqres.in">
+                </div>
+                <div>
+                    <input type="password" name="password" value="pistol">
+                </div>
+                <button type="submit">LOGIN</button>
+            </form>
+        </div>
+        <script>
+            window.onload = (()=>{
+                let loginForm = document.forms.login;
+                // login(loginForm)
+                // setCookie("token","qwerty12345",7);
+                // deleteCookie("token1")
+                if(typeof getCookie("token")!=undefined){
+                    window.location.href="/home.html"
+                }
+                // getCookie("token");
+            })
+            login = (async(form)=>{
+                formData = extractFormValue(form);
+                let data = {
+                    method: "POST",
+                    headers: {
+                        'Accept':"application/json",
+                        "Content-Type":"application/json"
+                    },
+                    body :formData
+                }
+                console.log(data)
+                let rawResponse = await fetch("https://reqres.in/api/register",data);
+                console.log(rawResponse.json())
+            })
+            extractFormValue=((form)=>{
+                data = {}
+                Array.from(form).forEach((input)=>{
+                    data[input.name]=input.value
+                })
+                return JSON.stringify(data)
+            })
+            setCookie = ((name,value,days)=>{
+                var date = new Date();
+                date.setDate(date.getDate() + days);
+                document.cookie = `${name}=${value};expires=${date};domain=127.0.0.1;path=/;`;
+            })
+            getCookie = ((name)=>{
+                cookies = document.cookie.split(';');
+                for(cookie of cookies){
+                    key = cookie.substring(0,cookie.indexOf("=")).trim()
+                    if(key===name){
+                        value = cookie.slice(cookie.indexOf("=")+1,-1)
+                        console.log(value)
+                        return value;
+                    }
+                }
+            })
+            deleteCookie = ((name)=>{
+                var date = new Date();
+                date.setDate(date.getDate()-1)
+                cookies = document.cookie.split(';');
+                for(cookie of cookies){
+                    key = cookie.substring(0,cookie.indexOf("=")).trim()
+                    if(key===name){
+                        document.cookie = `${name}=;expires=${date};domain=127.0.0.1;path=/;`;
+                    }
+                }
+                
+            })
+        </script>
+    </body>
+</html> -->
